@@ -22,18 +22,19 @@ SELECT * FROM Player WHERE Position = 'Forward';
 
 -- 5
 SELECT 
-    Conference,
-    Location,
-    Nickname,
-    COUNT(CASE WHEN Score1 > Score2 THEN 1 END) + COUNT(CASE WHEN Score1 < Score2 THEN 1 END) AS Wins
-FROM 
-    Team
-LEFT JOIN 
-    Game ON Team.TeamId IN (Game.TeamId1, Game.TeamId2)
-GROUP BY 
-    Conference, Location, Nickname
-ORDER BY 
-    Conference ASC, Wins DESC;
+  Conference,
+  Location,
+  Nickname,
+  SUM(CASE 
+      WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1  -- Team is TeamId1 and won
+      WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1  -- Team is TeamId2 and won
+      ELSE 0 
+      END) AS Wins
+FROM Team
+LEFT JOIN Game ON Team.TeamId = Game.TeamId1  -- Consider Team1
+LEFT JOIN Game AS Game2 ON Team.TeamId = Game2.TeamId2  -- Consider Team2
+GROUP BY Conference, Location, Nickname
+ORDER BY Conference ASC, Wins DESC;
 
 
 -- 6
