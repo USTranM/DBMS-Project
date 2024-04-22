@@ -25,14 +25,18 @@ SELECT
   Conference,
   Location,
   Nickname,
-  SUM(CASE 
-      WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1  -- Team is TeamId1 and won
-      WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1  -- Team is TeamId2 and won
+  COUNT(CASE 
+      (WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1) OR -- Team is TeamId1 and won
+      (WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1)  -- Team is TeamId2 and won
       ELSE 0 
       END) AS Wins
+  COUNT(CASE
+	   (WHEN OpponentTeam.Conference = Team.Conference AND ((WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1) 
+	    OR (WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1) 
+        ELSE 0) AS ConferenceWins
 FROM Team
-LEFT JOIN Game ON Team.TeamId = Game.TeamId1  -- Consider Team1
-LEFT JOIN Game AS Game2 ON Team.TeamId = Game2.TeamId2  -- Consider Team2
+LEFT JOIN Game ON Team.TeamId IN (Game.TeamId1, Game.TeamId2)  -- Consider Team1 and Team2
+LEFT JOIN Team AS OpponentTeam ON (Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId) -- Consider opposing team
 GROUP BY Conference, Location, Nickname
 ORDER BY Conference ASC, Wins DESC;
 
