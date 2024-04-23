@@ -1,5 +1,5 @@
 mysql <<EOFMYSQL
-use ;
+use mltran;
 show tables;
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -46,7 +46,7 @@ INSERT INTO Team (Location, Nickname, Conference, Division) VALUES
 
 INSERT INTO Game (TeamId1, TeamId2, Score1, Score2, Date) VALUES
 (1, 2, 2, 1, '2024-04-15'),
-(3, 4, 3, 2, '2024-04-16');
+(3, 4, 3, 2, '2024-04-17');
 
 INSERT INTO Player (TeamId, Name, Position) VALUES
 (1, 'Harry Kane', 'Forward'),

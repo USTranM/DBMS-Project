@@ -1,5 +1,5 @@
 mysql <<EOFMYSQL
-use ;
+use mltran;
 show tables;
 
 -- 1
@@ -21,46 +21,55 @@ SELECT * FROM Player WHERE Position = 'Forward';
 
 
 -- 5
-SELECT 
-  Conference,
-  Location,
-  Nickname,
-  COUNT(CASE 
-      (WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1) OR -- Team is TeamId1 and won
-      (WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1)  -- Team is TeamId2 and won
-      ELSE 0 
-      END) AS Wins
-  COUNT(CASE
-	   (WHEN OpponentTeam.Conference = Team.Conference AND ((WHEN TeamId1 = TeamId AND Score1 > Score2 THEN 1) 
-	    OR (WHEN TeamId2 = TeamId AND Score2 > Score1 THEN 1) 
-        ELSE 0) AS ConferenceWins
-FROM Team
-LEFT JOIN Game ON Team.TeamId IN (Game.TeamId1, Game.TeamId2)  -- Consider Team1 and Team2
-LEFT JOIN Team AS OpponentTeam ON (Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId) -- Consider opposing team
-GROUP BY Conference, Location, Nickname
-ORDER BY Conference ASC, Wins DESC;
+SELECT
+    Team.Conference,
+    Team.Location,
+    Team.Nickname,
+    COUNT(CASE
+            WHEN Game.TeamId1 = Team.TeamId AND Score1 > Score2 THEN 1  -- Team is TeamId1 and won
+            WHEN Game.TeamId2 = Team.TeamId AND Score2 > Score1 THEN 1  -- Team is TeamId2 and won
+            ELSE NULL
+          END) AS Wins,
+    COUNT(CASE
+            WHEN OpponentTeam.Conference = Team.Conference
+                AND ((Game.TeamId1 = Team.TeamId AND Score1 > Score2)
+                    OR (Game.TeamId2 = Team.TeamId AND Score2 > Score1)) THEN 1
+            ELSE NULL  -- Count only wins within the same conference
+          END) AS ConferenceWins
+FROM
+    Team
+LEFT JOIN
+    Game ON Team.TeamId IN (Game.TeamId1, Game.TeamId2)
+LEFT JOIN
+    Team AS OpponentTeam ON (Game.TeamId1 = OpponentTeam.TeamId OR Game.TeamId2 = OpponentTeam.TeamId)
+GROUP BY
+    Team.Conference, Team.Location, Team.Nickname
+ORDER BY
+    Team.Conference ASC, Wins DESC, ConferenceWins DESC;
+
 
 
 -- 6
 SELECT 
     Team.Location AS TeamLocation,
     Team.Nickname AS TeamNickname,
-    CONCAT(Opponent.Location, ' ', Opponent.Nickname) AS Opponent,
+    Opponent.Location AS OpponentLocation,
+    Opponent.Nickname AS OpponentNickname,
     Game.Date,
-    CONCAT(Game.Score1, '-', Game.Score2) AS Score,
-    IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2 OR Game.TeamId2 = 1 AND Game.Score2 > Game.Score1, 'Won', 'Lost') AS Result
+    Game.Score1,
+    Game.Score2,
+    IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result
 FROM 
     Game
 JOIN 
     Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId
 JOIN 
-    Team AS Opponent ON (Game.TeamId1 = Opponent.TeamId AND Game.TeamId2 != Opponent.TeamId)
-                      OR (Game.TeamId2 = Opponent.TeamId AND Game.TeamId1 != Opponent.TeamId)
-WHERE 
-    Team.TeamId = 1;
-
-
-
+    (
+        SELECT 
+            TeamId, Location, Nickname 
+        FROM 
+            Team
+    ) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId;
 
 
 -- 7
