@@ -142,15 +142,15 @@
     </div>
 
     <?php
-      $date = escapeshellarg($_POST['']);
-      $command = 'python3 nfl.py view_players_position ' . ;
+      $pos = escapeshellarg($_POST['position']);
+      $command = 'python3 nfl.py view_players_position ' . $pos;
       $escaped_command = escapeshellcmd($command);
       system($escaped_command);
     ?>
 
     <form action="view_players_position.php" method="post">
         <div>
-          <input type="text" class="form-control" placeholder="Position">
+          <input type="text" class="form-control" placeholder="Position" name="position">
           <!--
           <label for="team1">Team 1:</label>
           <select name="team1" id="team1">
