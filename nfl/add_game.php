@@ -27,6 +27,12 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <script>
+        function displaySuccessMessage() {
+            alert("Operation was successful!");
+        }
+    </script>
+
 </head>
 
 <body>
@@ -143,7 +149,7 @@
 
     <h2>New Game Entry</h2>
 
-<form action="#" method="post">
+<form action="add_game.php" method="post" onsubmit="displaySuccessMessage()">
     <div>
         <label for="team1">Team 1:</label>
         <select name="team1" id="team1">
@@ -175,16 +181,16 @@
 
 
 <?php
-$teamId1 = escapeshellarg($_POST['team1']);
-$teamId2 = escapeshellarg($_POST['team2']);
-$score1 = escapeshellarg($_POST['score1']);
-$score2 = escapeshellarg($_POST['score2']);
-$date = escapeshellarg($_POST['date']);
+  $teamId1 = escapeshellarg($_POST['team1']);
+  $teamId2 = escapeshellarg($_POST['team2']);
+  $score1 = escapeshellarg($_POST['score1']);
+  $score2 = escapeshellarg($_POST['score2']);
+  $date = escapeshellarg($_POST['date']);
 
-$command = 'python3 new_game.py ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
-$escaped_command = escapeshellcmd($command);
+  $command = 'python3 new_game.py ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+  $escaped_command = escapeshellcmd($command);
 
-system($escaped_command);
+  system($escaped_command);
 ?>
 
 

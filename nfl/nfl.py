@@ -149,6 +149,34 @@ def view_team_games(team):
     
     return html_table
 
+def view_games_date(date):
+    html_table = "" 
+    
+    try:
+        python_db.open_database(
+            "localhost", mysql_username, mysql_password, mysql_username
+        )  # open database
+        
+        sql = ('SELECT Team1.Location AS Team1Location, Team1.Nickname AS Team1Nickname, Team2.Location AS Team2Location, '
+               'Team2.Nickname AS Team2Nickname, Game.Score1, Game.Score2,'
+                'IF(Game.Score1 > Game.Score2, CONCAT(Team1.Location, ' ', Team1.Nickname),'
+                'IF(Game.Score2 > Game.Score1, CONCAT(Team2.Location, ' ', Team2.Nickname), \'Draw\')) AS Winner'
+                'FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId'
+                'JOIN Team AS Team2 ON Game.TeamId2 = Team2.TeamId'
+                'WHERE Game.Date = %s;')
+
+        res = python_db.executeSelect(sql, (date,))
+        html_table = "<table border='1'><tr><th>Home Nickname</th><th>Home Location</th><th>Opponent Team</th><th>Opponent Location</th></tr>"
+        for row in res:
+            html_table += f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td></tr>"
+        html_table += "</table>"
+
+        python_db.close_db()  # close db
+    except Exception as e:
+        logging.error(traceback.format_exc())
+    
+    return html_table
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 6:

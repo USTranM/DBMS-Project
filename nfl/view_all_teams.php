@@ -141,6 +141,18 @@
       </div>
     </div>
 
+    <?php
+      $teamId1 = escapeshellarg($_POST['team1']);
+      $teamId2 = escapeshellarg($_POST['team2']);
+      $score1 = escapeshellarg($_POST['score1']);
+      $score2 = escapeshellarg($_POST['score2']);
+      $date = escapeshellarg($_POST['date']);
+
+      $command = 'python3 nfl.py view_all_teams' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+      $escaped_command = escapeshellcmd($command);
+
+      system($escaped_command);
+    ?>
 
     <h2>Player Information</h2>
 
