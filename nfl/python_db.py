@@ -25,10 +25,9 @@ def printFormat(result):
 # select and display query
 
 
-def executeSelect(query):
-    cursor.execute(query)
-    res = printFormat(cursor.fetchall())
-    return res
+def executeSelect(query, params):
+    cursor.execute(query, params)
+    return cursor.fetchall()
 
 
 def insert(table, values):
