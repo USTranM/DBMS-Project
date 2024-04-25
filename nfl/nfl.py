@@ -4,8 +4,8 @@ import logging
 import python_db
 
 
-mysql_username = "replaceIt"  # please change to your username
-mysql_password = "replaceIt"  # please change to your MySQL password
+mysql_username = ""  # please change to your username
+mysql_password = ""  # please change to your MySQL password
 
 
 def add_game(teamId1, teamId2, score1, score2, date):
@@ -61,7 +61,6 @@ def add_game(teamId1, teamId2, score1, score2, date):
         logging.error(traceback.format_exc())
 
 def view_players_position(position):
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -69,19 +68,16 @@ def view_players_position(position):
         )  # open database
         sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
         res = python_db.executeSelect(sql, (position,))
-        html_table = "<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>"
+        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>"
-        html_table += "</table>"
+            print(f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 def view_all_teams():
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -103,17 +99,15 @@ def view_all_teams():
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
         res = python_db.executeSelect(sql)
-        html_table = "<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>"
+        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>"
-        html_table += "</table>"
+            print(f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 def view_team_games(team):
     html_table = "" 
     
@@ -179,8 +173,22 @@ def view_games_date(date):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 6:
-        print("Usage: python3 add_game.py <TeamId1> <TeamId2> <Score1> <Score2> <Date>")
-    else:
-        teamId1, teamId2, score1, score2, date = sys.argv[1:]
+
+    if mysql_username == '':
+        print('Change the username/password!')
+
+    if sys.argv[1] == 'add_game':
+        teamId1, teamId2, score1, score2, date = sys.argv[2:]
         add_game(teamId1, teamId2, score1, score2, date)
+    elif sys.argv[1] == 'new_player':
+        print('Function not yet implemented.')
+    elif sys.argv[1] == 'view_team':
+        print('Function not yet implemented')
+    elif sys.argv[1] == 'view_players_position':
+        view_players_position(sys.argv[2])
+    elif sys.argv[1] == 'view_all_teams':
+        print('Function not yet implemented')
+    elif sys.argv[1] == 'view_team_games':
+        print('Function not yet implemented')
+    elif sys.argv[1] == 'view_games_date':
+        print('Function not yet implemented')

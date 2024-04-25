@@ -29,9 +29,9 @@
 
   <script>
         function displaySuccessMessage() {
-            alert("Operation was successful!");
+            alert("Game added successfully!");
         }
-    </script>
+  </script>
 
 </head>
 
@@ -154,7 +154,7 @@
         <label for="team1">Team 1:</label>
         <select name="team1" id="team1">
             <option value="team1_id">Team 1 Name</option>
-            <!-- Add options for each team -->
+              
         </select>
     </div>
     <div>
@@ -187,7 +187,7 @@
   $score2 = escapeshellarg($_POST['score2']);
   $date = escapeshellarg($_POST['date']);
 
-  $command = 'python3 new_game.py ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+  $command = 'python3 nfl.py add_game' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
   $escaped_command = escapeshellcmd($command);
 
   system($escaped_command);
