@@ -61,7 +61,6 @@ def add_game(teamId1, teamId2, score1, score2, date):
         logging.error(traceback.format_exc())
 
 def view_players_position(position):
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -69,19 +68,16 @@ def view_players_position(position):
         )  # open database
         sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
         res = python_db.executeSelect(sql, (position,))
-        html_table = "<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>"
+        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>"
-        html_table += "</table>"
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 def view_all_teams():
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -103,17 +99,15 @@ def view_all_teams():
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
         res = python_db.executeSelect(sql)
-        html_table = "<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>"
+        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>"
-        html_table += "</table>"
+            print(f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 def view_team_games(team):
     html_table = "" 
     
