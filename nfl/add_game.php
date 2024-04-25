@@ -181,7 +181,7 @@ $score1 = escapeshellarg($_POST['score1']);
 $score2 = escapeshellarg($_POST['score2']);
 $date = escapeshellarg($_POST['date']);
 
-$command = 'python3 add_game.py ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+$command = 'python3 new_game.py ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
 $escaped_command = escapeshellcmd($command);
 
 system($escaped_command);
