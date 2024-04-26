@@ -167,6 +167,28 @@ def view_games_date(date):
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
+
+def view_best_division():
+    
+    try:
+        python_db.open_database(
+            "localhost", mysql_username, mysql_password, mysql_username
+        )  # open database
+        sql = ("SELECT p.Name, p.Position, t.Nickname, t.Division"
+                "FROM Player p JOIN Team t ON p.TeamId = t.TeamId"
+                "JOIN (SELECT t.Division FROM Team t JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2"
+                "WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1)"
+                "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;")
+        res = python_db.executeSelect(sql)
+        print("<table border='1'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
+        for row in res:
+            row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
+        print("</table>")
+
+        python_db.close_db()  # close db
+    except Exception as e:
+        logging.error(traceback.format_exc())
     
 
 if __name__ == "__main__":
@@ -174,7 +196,9 @@ if __name__ == "__main__":
     if mysql_username == '':
         print('Change the username/password!')
 
-    if sys.argv[1] == 'add_game':
+    if sys.argv[1] == 'index':
+        view_best_division()
+    elif sys.argv[1] == 'add_game':
         teamId1, teamId2, score1, score2, date = sys.argv[2:]
         add_game(teamId1, teamId2, score1, score2, date)
     elif sys.argv[1] == 'new_player':

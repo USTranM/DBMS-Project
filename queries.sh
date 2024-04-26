@@ -91,6 +91,19 @@ JOIN
 WHERE 
     Game.Date = '2024-04-17';
 
+-- 8
+SELECT p.Name, p.Position, t.Nickname, t.Division
+FROM Player p
+JOIN Team t ON p.TeamId = t.TeamId
+JOIN (
+    SELECT t.Division
+    FROM Team t
+    JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2
+    WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1)
+    GROUP BY t.Division
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+) best_division ON t.Division = best_division.Division;
 
 
 EOFMYSQL
