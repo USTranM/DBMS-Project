@@ -5,8 +5,8 @@ import python_db
 import numpy as np
 
 
-mysql_username = "mltran"  # please change to your username
-mysql_password = "sei5aBei"  # please change to your MySQL password
+mysql_username = ""  # please change to your username
+mysql_password = ""  # please change to your MySQL password
 
 
 def add_game(teamId1, teamId2, score1, score2, date):
