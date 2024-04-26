@@ -15,32 +15,21 @@ def add_game(teamId1, teamId2, score1, score2, date):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         values = (
-            teamId1
-            ,
-            teamId2
-            
-            ,score1
-            
-            ,score2
-            
-            ,date
-            
+            "'"
+            + teamId1
+            + "','"
+            + teamId2
+            + "','"
+            + score1
+            + "','"
+            + score2
+            + "','"
+            + date
+            + "'"
         )
-        # values = (
-        #     "'"
-        #     + teamId1
-        #     + "','"
-        #     + teamId2
-        #     + "','"
-        #     + score1
-        #     + "','"
-        #     + score2
-        #     + "','"
-        #     + date
-        #     + "'"
-        # )
         column_names= "(TeamId1, TeamId2, Score1, Score2, Date)"
         python_db.insert("Game", column_names, values)
+        print("Game added successfully!")
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -52,19 +41,6 @@ def add_player(team, playerName, position):
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
-        res = python_db.executeSelect("SELECT * FROM Player;", None)
-        # print(
-        #     "<br/>"
-        #     + "Table Game before:"
-        #     + "<br/>"
-        #     + res[0]
-        #     + "<br/>"
-        #     + res[1]
-        #     + "<br/>"
-        # )
-        # for i in range(len(res) - 2):
-        #     print(res[i + 2] + "<br/>")
-
         values = (
             "'"
             + team
@@ -75,21 +51,8 @@ def add_player(team, playerName, position):
             + "'"
         )
         column_names= "(TeamId, Name, Position)"
-        print(("Player", column_names, values))
         python_db.insert("Player", column_names, values)
-        res = python_db.executeSelect("SELECT * FROM Player;", None)
-        # print("<br/>" + "<br/>")
-        # print(
-        #     "<br/>"
-        #     + "Table ITEM after:"
-        #     + "<br/>"
-        #     + res[0]
-        #     + "<br/>"
-        #     + res[1]
-        #     + "<br/>"
-        # )
-        # for i in range(len(res) - 2):
-        #     print(res[i + 2] + "<br/>")
+        print("Player added successfully!")
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
