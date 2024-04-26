@@ -106,20 +106,19 @@
           <span></span>
       </div>
       
-      <!-- Menu -->
-      <div class="menu" id="menu">
+     <div class="menu" id="menu">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="new_game.html">New Game</a></li>
-            <li><a href="new_player.html">New Player</a></li>
-            <li><a href="view_team.html">View Team</a></li>
-            <li><a href="view_players_position.html">View Players of a Position</a></li>
-            <li><a href="view_all_teams.html">View All Teams</a></li>
-            <li><a href="view_team_games.html">View All Games by a Team</a></li>
-            <li><a href="view_games_date.html">View All Games on a Day</a></li>
+            <li><a href="add_game.php">New Game</a></li>
+            <li><a href="new_player.php">New Player</a></li>
+            <li><a href="view_team.php">View Team</a></li>
+            <li><a href="view_players_position.php">View Players of a Position</a></li>
+            <li><a href="view_all_teams.php">View All Teams</a></li>
+            <li><a href="view_team_games.php">View All Games by a Team</a></li>
+            <li><a href="view_games_date.php">View All Games on a Day</a></li>
         </ul>
     </div>
-      
+
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {
@@ -134,21 +133,35 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-5 mx-auto text-center">
-            <h1 class="text-white">View Team</h1>
-            <p>View all the players on a team with our intuitive site.</p>
+            <h1 class="text-white">View All Games on a Date</h1>
+            <p>View all the games on a particular date with our intuitive site.</p>
           </div>
         </div>
       </div>
     </div>
 
 
-    <h2>Player Information</h2>
+    <?php
+      $date = escapeshellarg($_POST['date']);
+      $command = 'python3 nfl.py view_games_date ' . $date;
+      $escaped_command = escapeshellcmd($command);
+      // $output = shell_exec($command);
+      system($escaped_command);
+    ?>
 
-    <!-- Python output will be inserted here -->
+    <form action="view_games_date.php" method="post">
+        <div>
+          <label for="date">Date:</label>
+          <input type="date" name="date" id="date">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>All Games On This Date</h2>
+
     <div id="player-table">
-        <!-- Python output will be inserted here -->
+      <!-- <?php echo $output; ?> -->
     </div>
-
 
 
     <footer class="footer-section">

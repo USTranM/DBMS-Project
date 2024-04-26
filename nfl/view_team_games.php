@@ -110,13 +110,13 @@
       <div class="menu" id="menu">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="new_game.html">New Game</a></li>
-            <li><a href="new_player.html">New Player</a></li>
-            <li><a href="view_team.html">View Team</a></li>
-            <li><a href="view_players_position.html">View Players of a Position</a></li>
-            <li><a href="view_all_teams.html">View All Teams</a></li>
-            <li><a href="view_team_games.html">View All Games by a Team</a></li>
-            <li><a href="view_games_date.html">View All Games on a Day</a></li>
+            <li><a href="add_game.php">New Game</a></li>
+            <li><a href="new_player.php">New Player</a></li>
+            <li><a href="view_team.php">View Team</a></li>
+            <li><a href="view_players_position.php">View Players of a Position</a></li>
+            <li><a href="view_all_teams.php">View All Teams</a></li>
+            <li><a href="view_team_games.php">View All Games by a Team</a></li>
+            <li><a href="view_games_date.php">View All Games on a Day</a></li>
         </ul>
     </div>
       
@@ -142,11 +142,31 @@
     </div>
 
 
+    <?php
+      $team = escapeshellarg($_POST['team']);
+      $command = 'python3 nfl.py view_team_games ' . $team;
+      $escaped_command = escapeshellcmd($command);
+      // $output = shell_exec($command);
+      system($escaped_command);
+    ?>
+
+    <form action="view_team_games.php" method="post">
+        <div>
+          <input type="text" class="form-control" placeholder="Team Name" name="team">
+          <!--
+          <label for="team1">Team 1:</label>
+          <select name="team1" id="team1">
+              <option value="team1_id">Team 1 Name</option>
+          </select>
+          -->
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
     <h2>Player Information</h2>
 
-    <!-- Python output will be inserted here -->
     <div id="player-table">
-        <!-- Python output will be inserted here -->
+      <!-- <?php echo $output; ?> -->
     </div>
 
 
