@@ -8,55 +8,108 @@ import numpy as np
 mysql_username = ""  # please change to your username
 mysql_password = ""  # please change to your MySQL password
 
-
+#Problem 1
 def add_game(teamId1, teamId2, score1, score2, date):
     try:
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
-        res = python_db.executeSelect("SELECT * FROM Game;")
-        res = res.split("\n")  # split the header and data for printing
-        print(
-            "<br/>"
-            + "Table Game before:"
-            + "<br/>"
-            + res[0]
-            + "<br/>"
-            + res[1]
-            + "<br/>"
+        values = (
+            teamId1
+            ,
+            teamId2
+            
+            ,score1
+            
+            ,score2
+            
+            ,date
+            
         )
-        for i in range(len(res) - 2):
-            print(res[i + 2] + "<br/>")
+        # values = (
+        #     "'"
+        #     + teamId1
+        #     + "','"
+        #     + teamId2
+        #     + "','"
+        #     + score1
+        #     + "','"
+        #     + score2
+        #     + "','"
+        #     + date
+        #     + "'"
+        # )
+        column_names= "(TeamId1, TeamId2, Score1, Score2, Date)"
+        python_db.insert("Game", column_names, values)
+        python_db.close_db()  # close db
+    except Exception as e:
+        logging.error(traceback.format_exc())
+
+
+#Problem 2
+def add_player(team, playerName, position):
+    try:
+        python_db.open_database(
+            "localhost", mysql_username, mysql_password, mysql_username
+        )  # open database
+        res = python_db.executeSelect("SELECT * FROM Player;", None)
+        # print(
+        #     "<br/>"
+        #     + "Table Game before:"
+        #     + "<br/>"
+        #     + res[0]
+        #     + "<br/>"
+        #     + res[1]
+        #     + "<br/>"
+        # )
+        # for i in range(len(res) - 2):
+        #     print(res[i + 2] + "<br/>")
 
         values = (
             "'"
-            + teamId1
+            + team
             + "','"
-            + teamId2
+            + playerName
             + "','"
-            + score1
-            + "','"
-            + score2
-            + "','"
-            + date
+            + position
             + "'"
         )
+        column_names= "(TeamId, Name, Position)"
+        print(("Player", column_names, values))
+        python_db.insert("Player", column_names, values)
+        res = python_db.executeSelect("SELECT * FROM Player;", None)
+        # print("<br/>" + "<br/>")
+        # print(
+        #     "<br/>"
+        #     + "Table ITEM after:"
+        #     + "<br/>"
+        #     + res[0]
+        #     + "<br/>"
+        #     + res[1]
+        #     + "<br/>"
+        # )
+        # for i in range(len(res) - 2):
+        #     print(res[i + 2] + "<br/>")
+        python_db.close_db()  # close db
+    except Exception as e:
+        logging.error(traceback.format_exc())
 
-        python_db.insert("Game", values)
-        res = python_db.executeSelect("SELECT * FROM Game;")
-        res = res.split("\n")  # split the header and data for printing
-        print("<br/>" + "<br/>")
-        print(
-            "<br/>"
-            + "Table ITEM after:"
-            + "<br/>"
-            + res[0]
-            + "<br/>"
-            + res[1]
-            + "<br/>"
-        )
-        for i in range(len(res) - 2):
-            print(res[i + 2] + "<br/>")
+# Problem 3
+def view_team():
+    try:
+        python_db.open_database(
+            "localhost", mysql_username, mysql_password, mysql_username
+        )  # open database
+
+        sql = ("SELECT * FROM Player WHERE TeamId = 1;")
+
+        res = python_db.executeSelect(sql, None)
+        print("<table border='1'><tr><th>Player ID</th><th>Team Id</th><th>Name</th><th>Position</th></tr>")
+        for row in res:
+            row = dict(zip(['PlayerId', 'TeamId', 'Name', 'Position'], row))
+            print(f"<tr><td>{row['PlayerId']}</td><td>{row['TeamId']}</td><td>{row['Name']}</td><td>{row['Position']}</td></tr>")
+        print("</table>")
+
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -206,10 +259,11 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'add_game':
         teamId1, teamId2, score1, score2, date = sys.argv[2:]
         add_game(teamId1, teamId2, score1, score2, date)
-    elif sys.argv[1] == 'new_player':
-        print('Function not yet implemented.')
+    elif sys.argv[1] == 'add_player':
+        team, playerName, position = sys.argv[2:]
+        add_player(team, playerName, position)
     elif sys.argv[1] == 'view_team':
-        print('Function not yet implemented')
+        view_team()
     elif sys.argv[1] == 'view_players_position':
         view_players_position(sys.argv[2])
     elif sys.argv[1] == 'view_all_teams':

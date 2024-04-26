@@ -115,7 +115,7 @@
       <!-- Menu -->
 	<div class="menu" id="menu">
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="add_game.php">New Game</a></li>
             <li><a href="new_player.php">New Player</a></li>
             <li><a href="view_team.php">View Team</a></li>
@@ -153,8 +153,10 @@
     <div>
         <label for="team1">Team 1:</label>
         <select name="team1" id="team1">
-            <option value="team1_id">Team 1 Name</option>
-              
+            <option value="United">United</option>
+            <option value="Liverpool">Liverpool</option>
+            <option value="FC Barcelona">FC Barcelona</option>
+            <option value="Real Madrid">Real Madrid</option>
         </select>
     </div>
     <div>
@@ -164,8 +166,10 @@
     <div>
         <label for="team2">Team 2:</label>
         <select name="team2" id="team2">
-            <option value="team2_id">Team 2 Name</option>
-            <!-- Add options for each team -->
+            <option value="United">United</option>
+            <option value="Liverpool">Liverpool</option>
+            <option value="FC Barcelona">FC Barcelona</option>
+            <option value="Real Madrid">Real Madrid</option>
         </select>
     </div>
     <div>
@@ -187,7 +191,8 @@
   $score2 = escapeshellarg($_POST['score2']);
   $date = escapeshellarg($_POST['date']);
 
-  $command = 'python3 nfl.py add_game' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+  $command = 'python3 nfl.py add_game' . ' ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+  echo $command;
   $escaped_command = escapeshellcmd($command);
 
   system($escaped_command);

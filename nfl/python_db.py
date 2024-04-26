@@ -30,8 +30,9 @@ def executeSelect(query, params):
     return cursor.fetchall()
 
 
-def insert(table, values):
-    query = "INSERT into " + table + " values (" + values + ")" + ';'
+def insert(table, column_names, values):
+    query = "INSERT into " + table + " " + column_names + " values (" + values + ")" + ';'
+    # query = "INSERT into " + table + " values (" + values + ")" + ';'
     cursor.execute(query)
     conn.commit()
 

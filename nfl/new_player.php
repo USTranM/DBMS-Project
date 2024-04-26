@@ -27,6 +27,11 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <script>
+        function displaySuccessMessage() {
+            alert("Player added successfully!");
+        }
+  </script>
 </head>
 
 <body>
@@ -109,7 +114,7 @@
       <!-- Menu -->
       <div class="menu" id="menu">
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="add_game.php">New Game</a></li>
             <li><a href="new_player.php">New Player</a></li>
             <li><a href="view_team.php">View Team</a></li>
@@ -118,8 +123,8 @@
             <li><a href="view_team_games.php">View All Games by a Team</a></li>
             <li><a href="view_games_date.php">View All Games on a Day</a></li>
         </ul>
-      </div>
-
+    </div>
+      
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {
@@ -134,33 +139,46 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-5 mx-auto text-center">
-            <h1 class="text-white">View Team</h1>
-            <p>View all the players on a team with our intuitive site.</p>
+            <h1 class="text-white">New Player</h1>
+            <p>Insert a new player with our intuitive site.</p>
           </div>
         </div>
       </div>
     </div>
 
+    <h2>New Player Entry</h2>
 
-    <h2>Player Information</h2>
-    
-    <?php
-      $command = 'python3 nfl.py view_team';
-      $escaped_command = escapeshellcmd($command);
-      system($escaped_command);
-    ?>
-        <div class="site-section bg-dark">
-      <div class="container">
-            
-            <div class="widget-next-match">
-              <table class="table custom-table">
+    <form action="new_player.php" method="post" onsubmit="displaySuccessMessage()">
+        <div>
+            <label for="team">Select Team:</label>
+            <select name="team" id="team">
+              <option value="team1_id">United</option>
+              <option value="team1_id">Liverpool</option>
+              <option value="team1_id">FC Barcelona</option>
+              <option value="team1_id">Real Madrid</option>
+            </select>
+        </div>
+        <div>
+            <label for="playerName">Player Name:</label>
+            <input type="text" name="playerName" id="playerName">
+        </div>
+        <div>
+            <label for="position">Position:</label>
+            <input type="text" name="position" id="position">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
 
-              </table>
-            </div>
-      </div>
-    </div>
+<?php
+  $team = escapeshellarg($_POST['team']);
+  $playerName = escapeshellarg($_POST['playerName']);
+  $position = escapeshellarg($_POST['position']);
 
+  $command = 'python3 nfl.py add_player' . ' ' . $team . ' ' . $playerName . ' ' . $position;
+  $escaped_command = escapeshellcmd($command);
 
+  system($escaped_command);
+?>
 
     <footer class="footer-section">
       <div class="container">
