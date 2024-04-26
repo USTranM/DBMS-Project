@@ -27,6 +27,8 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+
+
 </head>
 
 <body>
@@ -107,7 +109,7 @@
       </div>
       
       <!-- Menu -->
-    <div class="menu" id="menu">
+      <div class="menu" id="menu">
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="add_game.php">New Game</a></li>
@@ -118,8 +120,8 @@
             <li><a href="view_team_games.php">View All Games by a Team</a></li>
             <li><a href="view_games_date.php">View All Games on a Day</a></li>
         </ul>
-    </div>
-
+      </div>
+      
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {
@@ -133,45 +135,31 @@
     <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
       <div class="container">
         <div class="row align-items-center">
-          <div class="col-lg-5 mx-auto text-center">
-            <h1 class="text-white">View All Players of a Position</h1>
-            <p>View all the players of a particular position with our intuitive site.</p>
+          <div class="col-lg-5 ml-auto">
+            <h1 class="text-white">NFL Hub</h1>
+            <p>Find all related information about players and teams in the NFL. Click the top left corner to get started.</p>
           </div>
         </div>
       </div>
     </div>
 
     <?php
-      $pos = escapeshellarg($_POST['position']);
-      $command = 'python3 nfl.py view_players_position ' . $pos;
+      $command = 'python3 nfl.py index';
       $escaped_command = escapeshellcmd($command);
-      // $output = shell_exec($command);
       system($escaped_command);
     ?>
 
-    <form action="view_players_position.php" method="post">
-        <div>
-          <input type="text" class="form-control" placeholder="Position" name="position">
-          <!--
-          <label for="team1">Team 1:</label>
-          <select name="team1" id="team1">
-              <option value="team1_id">Team 1 Name</option>
-          </select>
-          -->
-        </div>
-        <button type="submit">Submit</button>
-    </form>
-
-    <h2>Player Information</h2>
-
-
-      <div class="site-section bg-dark">
+    <div class="site-section bg-dark">
       <div class="container">
             
             <div class="widget-next-match">
               <table class="table custom-table">
+
               </table>
             </div>
+      </div>
+    </div> <!-- .site-section --> <strong class="text-white">Gravity Smash</strong>
+
       </div>
     </div>
 
@@ -197,8 +185,6 @@
         </div>
       </div>
     </footer>
-
-
 
   </div>
   <!-- .site-wrap -->

@@ -149,9 +149,15 @@
 
     <h2>Player Information</h2>
 
-    <!-- Python output will be inserted here -->
-    <div id="player-table">
-        <!-- Python output will be inserted here -->
+    <div class="site-section bg-dark">
+      <div class="container">
+            
+            <div class="widget-next-match">
+              <table class="table custom-table">
+
+              </table>
+            </div>
+      </div>
     </div>
 
 
