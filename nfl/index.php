@@ -111,7 +111,7 @@
       <!-- Menu -->
       <div class="menu" id="menu">
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="add_game.php">New Game</a></li>
             <li><a href="new_player.php">New Player</a></li>
             <li><a href="view_team.php">View Team</a></li>
@@ -148,21 +148,13 @@
       $escaped_command = escapeshellcmd($command);
       system($escaped_command);
     ?>
-
-    <div class="site-section bg-dark">
-      <div class="container">
-            
-            <div class="widget-next-match">
-              <table class="table custom-table">
-
-              </table>
-            </div>
-      </div>
-    </div> <!-- .site-section --> <strong class="text-white">Gravity Smash</strong>
-
-      </div>
-    </div>
-
+	<h2>Best Division Based on Wins</h2>
+  	<div class="container">
+    		<div class="widget-next-match">
+      			<table class="table custom-table">
+      			</table>
+    		</div>
+  	</div>
 
     <footer class="footer-section">
       <div class="container">

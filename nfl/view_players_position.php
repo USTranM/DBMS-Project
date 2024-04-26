@@ -109,7 +109,7 @@
       <!-- Menu -->
     <div class="menu" id="menu">
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="add_game.php">New Game</a></li>
             <li><a href="new_player.php">New Player</a></li>
             <li><a href="view_team.php">View Team</a></li>
