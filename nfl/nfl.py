@@ -61,6 +61,7 @@ def add_game(teamId1, teamId2, score1, score2, date):
     except Exception as e:
         logging.error(traceback.format_exc())
 
+# Problem 4
 def view_players_position(position):
     
     try:
@@ -79,6 +80,7 @@ def view_players_position(position):
     except Exception as e:
         logging.error(traceback.format_exc())
     
+# Problem 5
 def view_all_teams():
     
     try:
@@ -110,7 +112,8 @@ def view_all_teams():
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
-    
+
+# Problem 6
 def view_team_games(team):
     html_table = "" 
     
@@ -137,7 +140,8 @@ def view_team_games(team):
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
-    
+
+# Problem 7
 def view_games_date(date):
     html_table = "" 
     
@@ -167,7 +171,25 @@ def view_games_date(date):
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
-    
+
+# Bonus Query
+def view_best_division():
+
+    try:
+        python_db.open_database(
+            "localhost", mysql_username, mysql_password, mysql_username
+        )  # open database
+        sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
+        res = python_db.executeSelect(sql, (position,))
+        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
+        for row in res:
+            row = dict(zip(['Name', 'Position', 'Nickname'], row))
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
+        print("</table>")
+
+        python_db.close_db()  # close db
+    except Exception as e:
+        logging.error(traceback.format_exc())
 
 if __name__ == "__main__":
 
@@ -188,5 +210,4 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'view_team_games':
         view_team_games(sys.argv[2])
     elif sys.argv[1] == 'view_games_date':
-        print(sys.argv[2])
         view_games_date(sys.argv[2])
