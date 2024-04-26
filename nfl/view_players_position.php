@@ -107,19 +107,19 @@
       </div>
       
       <!-- Menu -->
-      <div class="menu" id="menu">
-          <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="new_game.html">New Game</a></li>
-              <li><a href="new_player.html">New Player</a></li>
-              <li><a href="view_team.html">View Team</a></li>
-              <li><a href="view_players_position.html">View Players of a Position</a></li>
-              <li><a href="view_all_teams.html">View All Teams</a></li>
-              <li><a href="view_team_games.html">View All Games by a Team</a></li>
-              <li><a href="view_games_date.html">View All Games on a Day</a></li>
-          </ul>
-      </div>
-      
+    <div class="menu" id="menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="add_game.php">New Game</a></li>
+            <li><a href="new_player.php">New Player</a></li>
+            <li><a href="view_team.php">View Team</a></li>
+            <li><a href="view_players_position.php">View Players of a Position</a></li>
+            <li><a href="view_all_teams.php">View All Teams</a></li>
+            <li><a href="view_team_games.php">View All Games by a Team</a></li>
+            <li><a href="view_games_date.php">View All Games on a Day</a></li>
+        </ul>
+    </div>
+
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {

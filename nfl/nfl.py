@@ -5,8 +5,8 @@ import python_db
 import numpy as np
 
 
-mysql_username = ""  # please change to your username
-mysql_password = ""  # please change to your MySQL password
+mysql_username = "mltran"  # please change to your username
+mysql_password = "sei5aBei"  # please change to your MySQL password
 
 
 def add_game(teamId1, teamId2, score1, score2, date):
@@ -119,12 +119,13 @@ def view_team_games(team):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname,"
-                "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2,"
-                "IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result"
-                "FROM Game JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId"
-                "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId;"
-                "WHERE Team.Nickname = %s")
+        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, "
+            "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
+            "IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result "
+            "FROM Game "
+            "JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId "
+            "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId "
+            "WHERE Team.Nickname = %s")
 
         res = python_db.executeSelect(sql, (team,))
         print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
@@ -145,12 +146,16 @@ def view_games_date(date):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ("SELECT Team1.Nickname AS Team1Nickname, Team1.Location AS Team1Location, Team2.Nickname AS Team2Nickname,"
-                "Team2.Location AS Team2Location, Game.Score1, Game.Score2,"
-                "IF(Game.Score1 > Game.Score2, CONCAT(Team1.Location, ' ', Team1.Nickname),"
-                "IF(Game.Score2 > Game.Score1, CONCAT(Team2.Location, ' ', Team2.Nickname), 'Draw')) AS Winner"
-                "FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId JOIN Team AS Team2 ON Game.TeamId2 = Team2.TeamId"
-                "WHERE Game.Date = %s;")
+        sql = (
+            "SELECT Team1.Nickname AS Team1Nickname, Team1.Location AS Team1Location, Team2.Nickname AS Team2Nickname, "
+            "Team2.Location AS Team2Location, Game.Score1, Game.Score2, "
+            "IF(Game.Score1 > Game.Score2, CONCAT(Team1.Location, ' ', Team1.Nickname), "
+            "IF(Game.Score2 > Game.Score1, CONCAT(Team2.Location, ' ', Team2.Nickname), 'Draw')) AS Winner "
+            "FROM Game "
+            "JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId "
+            "JOIN Team AS Team2 ON Game.TeamId2 = Team2.TeamId "
+            "WHERE Game.Date = %s;"
+        )
 
         res = python_db.executeSelect(sql, (date,))
         print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
@@ -163,8 +168,6 @@ def view_games_date(date):
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 
 if __name__ == "__main__":
 
@@ -185,4 +188,5 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'view_team_games':
         view_team_games(sys.argv[2])
     elif sys.argv[1] == 'view_games_date':
+        print(sys.argv[2])
         view_games_date(sys.argv[2])
