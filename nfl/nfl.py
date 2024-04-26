@@ -2,6 +2,7 @@ import sys
 import traceback
 import logging
 import python_db
+import numpy as np
 
 
 mysql_username = ""  # please change to your username
@@ -70,7 +71,8 @@ def view_players_position(position):
         res = python_db.executeSelect(sql, (position,))
         print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
         for row in res:
-            print(f"<tr><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>")
+            row = dict(zip(['Name', 'Position', 'Nickname'], row))
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
         print("</table>")
 
         python_db.close_db()  # close db
@@ -84,7 +86,7 @@ def view_all_teams():
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
 
-        sql = ("SELECT Team.Conference, Team.Location, Team.Nickname, "
+        sql = ("SELECT Team.Nickname, Team.Location, Team.Conference, "
                "COUNT(CASE WHEN Game.TeamId1 = Team.TeamId AND Score1 > Score2 THEN 1 "
                "            WHEN Game.TeamId2 = Team.TeamId AND Score2 > Score1 THEN 1 "
                "            ELSE NULL END) AS Wins, "
@@ -99,9 +101,10 @@ def view_all_teams():
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
         res = python_db.executeSelect(sql)
-        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>")
+        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
         for row in res:
-            print(f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>")
+            row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
+            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['TeamConference']}</td><td>{row['Wins']}</td><td>{row['ConferenceWins']}</td></tr>")
         print("</table>")
 
         python_db.close_db()  # close db
@@ -116,33 +119,24 @@ def view_team_games(team):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ("SELECT Team.Conference, Team.Location, Team.Nickname, "
-               "COUNT(CASE WHEN Game.TeamId1 = Team.TeamId AND Score1 > Score2 THEN 1 "
-               "            WHEN Game.TeamId2 = Team.TeamId AND Score2 > Score1 THEN 1 "
-               "            ELSE NULL END) AS Wins, "
-               "COUNT(CASE WHEN OpponentTeam.Conference = Team.Conference "
-               "               AND ((Game.TeamId1 = Team.TeamId AND Score1 > Score2) "
-               "                    OR (Game.TeamId2 = Team.TeamId AND Score2 > Score1)) "
-               "           THEN 1 ELSE NULL END) AS ConferenceWins "
-               "FROM Team "
-               "LEFT JOIN Game ON Team.TeamId IN (Game.TeamId1, Game.TeamId2) "
-               "LEFT JOIN Team AS OpponentTeam ON (Game.TeamId1 = OpponentTeam.TeamId OR Game.TeamId2 = OpponentTeam.TeamId) "
-               "GROUP BY Team.Conference, Team.Location, Team.Nickname "
-               "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC"
-               "WHERE Team.Nickname = %s")
+        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname,"
+                "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2,"
+                "IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result"
+                "FROM Game JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId"
+                "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId;"
+                "WHERE Team.Nickname = %s")
 
         res = python_db.executeSelect(sql, (team,))
-        html_table = "<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th></tr>"
+        print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['Nickname']}</td><td>{row['Location']}</td><td>{row['Conference']}</td></tr>"
-        html_table += "</table>"
+            row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
+            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
     
-    return html_table
-
 def view_games_date(date):
     html_table = "" 
     
@@ -151,19 +145,19 @@ def view_games_date(date):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ('SELECT Team1.Location AS Team1Location, Team1.Nickname AS Team1Nickname, Team2.Location AS Team2Location, '
-               'Team2.Nickname AS Team2Nickname, Game.Score1, Game.Score2,'
-                'IF(Game.Score1 > Game.Score2, CONCAT(Team1.Location, ' ', Team1.Nickname),'
-                'IF(Game.Score2 > Game.Score1, CONCAT(Team2.Location, ' ', Team2.Nickname), \'Draw\')) AS Winner'
-                'FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId'
-                'JOIN Team AS Team2 ON Game.TeamId2 = Team2.TeamId'
-                'WHERE Game.Date = %s;')
+        sql = ("SELECT Team1.Nickname AS Team1Nickname, Team1.Location AS Team1Location, Team2.Nickname AS Team2Nickname,"
+                "Team2.Location AS Team2Location, Game.Score1, Game.Score2,"
+                "IF(Game.Score1 > Game.Score2, CONCAT(Team1.Location, ' ', Team1.Nickname),"
+                "IF(Game.Score2 > Game.Score1, CONCAT(Team2.Location, ' ', Team2.Nickname), 'Draw')) AS Winner"
+                "FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId JOIN Team AS Team2 ON Game.TeamId2 = Team2.TeamId"
+                "WHERE Game.Date = %s;")
 
         res = python_db.executeSelect(sql, (date,))
-        html_table = "<table border='1'><tr><th>Home Nickname</th><th>Home Location</th><th>Opponent Team</th><th>Opponent Location</th></tr>"
+        print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
         for row in res:
-            html_table += f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td></tr>"
-        html_table += "</table>"
+            row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
+            print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -187,8 +181,8 @@ if __name__ == "__main__":
     elif sys.argv[1] == 'view_players_position':
         view_players_position(sys.argv[2])
     elif sys.argv[1] == 'view_all_teams':
-        print('Function not yet implemented')
+        view_all_teams()
     elif sys.argv[1] == 'view_team_games':
-        print('Function not yet implemented')
+        view_team_games(sys.argv[2])
     elif sys.argv[1] == 'view_games_date':
-        print('Function not yet implemented')
+        view_games_date(sys.argv[2])

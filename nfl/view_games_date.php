@@ -142,13 +142,27 @@
     </div>
 
 
-    <h2>Player Information</h2>
+    <?php
+      $date = escapeshellarg($_POST['date']);
+      $command = 'python3 nfl.py view_games_date ' . $date;
+      $escaped_command = escapeshellcmd($command);
+      // $output = shell_exec($command);
+      system($escaped_command);
+    ?>
 
-    <!-- Python output will be inserted here -->
+    <form action="view_players_position.php" method="post">
+        <div>
+          <label for="date">Date:</label>
+          <input type="date" name="date" id="date">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>All Games On This Date</h2>
+
     <div id="player-table">
-        <!-- Python output will be inserted here -->
+      <!-- <?php echo $output; ?> -->
     </div>
-
 
 
     <footer class="footer-section">

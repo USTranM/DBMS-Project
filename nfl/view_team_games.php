@@ -142,11 +142,31 @@
     </div>
 
 
+    <?php
+      $team = escapeshellarg($_POST['team']);
+      $command = 'python3 nfl.py view_team_games ' . $team;
+      $escaped_command = escapeshellcmd($command);
+      // $output = shell_exec($command);
+      system($escaped_command);
+    ?>
+
+    <form action="view_players_position.php" method="post">
+        <div>
+          <input type="text" class="form-control" placeholder="Team Name" name="team">
+          <!--
+          <label for="team1">Team 1:</label>
+          <select name="team1" id="team1">
+              <option value="team1_id">Team 1 Name</option>
+          </select>
+          -->
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
     <h2>Player Information</h2>
 
-    <!-- Python output will be inserted here -->
     <div id="player-table">
-        <!-- Python output will be inserted here -->
+      <!-- <?php echo $output; ?> -->
     </div>
 
 

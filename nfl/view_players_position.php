@@ -145,8 +145,8 @@
       $pos = escapeshellarg($_POST['position']);
       $command = 'python3 nfl.py view_players_position ' . $pos;
       $escaped_command = escapeshellcmd($command);
-      $output = shell_exec($command);
-      #system($escaped_command);
+      // $output = shell_exec($command);
+      system($escaped_command);
     ?>
 
     <form action="view_players_position.php" method="post">
@@ -165,7 +165,7 @@
     <h2>Player Information</h2>
 
     <div id="player-table">
-      <?php echo $output; ?>
+      <!-- <?php echo $output; ?> -->
     </div>
 
 
