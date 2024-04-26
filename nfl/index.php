@@ -142,32 +142,59 @@
               menu.classList.toggle('open');
           }
       </script>
-      
-      </body>
 
-    <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-5 ml-auto">
-            <h1 class="text-white">NFL Hub</h1>
-            <p>Find all related information about players and teams in the NFL. Click the top left corner to get started.</p>
+      <div id="header">
+				<a href="index.php" id="nfl" tabindex="1">
+					<h1 class="logo-icon">
+						Home					</h1>
+				</a>
+				<a href="#" class="header-appname-container menutoggle" tabindex="2">
+					<button class="burger">
+						Menu					</button>
+					<h1 class="header-appname">
+						Files					</h1>
+				</a>
+				<div id="logo-claim" style="display:none;"></div>
+				</div>
+
+				<div class="notifications hidden"><div class="notifications-button menutoggle"><img class="svg" alt="Notifications" src="/owncloud/apps/notifications/img/notifications.svg"></div><div class="notification-container menu"><div class="emptycontent"><h2>No notifications</h2></div><div class="notification-wrapper"></div></div></div><form class="searchbox" action="#" method="post" role="search" novalidate="">
+					<label for="searchbox" class="hidden-visually">
+						Search					</label>
+					<input id="searchbox" type="search" name="query" value="" required="" autocomplete="off" tabindex="5" control-id="ControlID-1">
+				</form>
+			</div>
+      
+      <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-5 ml-auto">
+              <h1 class="text-white">NFL Hub</h1>
+              <p>Find all related information about players and teams in the NFL. Click the top left corner to get started.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
 
     <?php
       $command = 'python3 nfl.py index';
       $escaped_command = escapeshellcmd($command);
       system($escaped_command);
     ?>
-	<h2>Best Division Based on Wins</h2>
-  	<div class="container">
+
+	  <h2>Best Division Based on Wins</h2>
+  	  <div class="container">
     		<div class="widget-next-match">
       			<table class="table custom-table">
       			</table>
     		</div>
   	</div>
+
+      </body>
+
+
+
+
 
     <footer class="footer-section">
       <div class="container">
