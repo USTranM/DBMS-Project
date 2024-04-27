@@ -129,26 +129,6 @@
           }
       </script>
 
-      <div id="header">
-				<a href="index.php" id="nfl" tabindex="1">
-					<h1 class="logo-icon">
-						Home					</h1>
-				</a>
-				<a href="#" class="header-appname-container menutoggle" tabindex="2">
-					<button class="burger">
-						Menu					</button>
-					<h1 class="header-appname">
-						Files					</h1>
-				</a>
-				<div id="logo-claim" style="display:none;"></div>
-				</div>
-
-				<div class="notifications hidden"><div class="notifications-button menutoggle"><img class="svg" alt="Notifications" src="/owncloud/apps/notifications/img/notifications.svg"></div><div class="notification-container menu"><div class="emptycontent"><h2>No notifications</h2></div><div class="notification-wrapper"></div></div></div><form class="searchbox" action="#" method="post" role="search" novalidate="">
-					<label for="searchbox" class="hidden-visually">
-						Search					</label>
-					<input id="searchbox" type="search" name="query" value="" required="" autocomplete="off" tabindex="5" control-id="ControlID-1">
-				</form>
-			</div>
       
       <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
         <div class="container">

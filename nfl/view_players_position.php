@@ -151,7 +151,7 @@
 
     <form action="view_players_position.php" method="post">
         <div>
-          <input type="text" class="form-control" placeholder="Position" name="position">
+          <input type="text" class="form-control" placeholder="Position" name="position" required>
           <!--
           <label for="team1">Team 1:</label>
           <select name="team1" id="team1">
