@@ -29,6 +29,21 @@
 
 
 
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
 </head>
 
 <body>
@@ -101,14 +116,18 @@
       </head>
       <body>
 
-	
+              <!-- Home Button -->
+  <a href="index.php" class="home-button">Home</a>
+
+      
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
           <span></span>
           <span></span>
       </div>
-
+      
+      <!-- Menu -->
       <div class="menu" id="menu">
         <ul>
             <li><a href="index.php">Home</a></li>
@@ -121,6 +140,7 @@
             <li><a href="view_games_date.php">View All Games on a Day</a></li>
         </ul>
       </div>
+      
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {
@@ -128,19 +148,19 @@
               menu.classList.toggle('open');
           }
       </script>
-
       
-      <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
-        <div class="container">
-          <div class="row align-items-center">
-            <div class="col-lg-5 ml-auto">
-              <h1 class="text-white">NFL Hub</h1>
-              <p>Find all related information about players and teams in the NFL. Click the top left corner to get started.</p>
-            </div>
+      </body>
+
+    <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-5 ml-auto">
+            <h1 class="text-white">NFL Hub</h1>
+            <p>Find all related information about players and teams in the NFL. Click the top left corner to get started.</p>
           </div>
         </div>
       </div>
-
+    </div>
 
     <?php
       $command = 'python3 nfl.py index';
@@ -148,18 +168,19 @@
       system($escaped_command);
     ?>
 
-	  <h2>Best Division Based on Wins</h2>
-  	  <div class="container">
-    		<div class="widget-next-match">
-      			<table class="table custom-table">
-      			</table>
-    		</div>
-  	</div>
+    <div class="site-section bg-dark">
+      <div class="container">
+            
+            <div class="widget-next-match">
+              <table class="table custom-table">
 
-      </body>
+              </table>
+            </div>
+      </div>
+    </div> <!-- .site-section --> <strong class="text-white">Gravity Smash</strong>
 
-
-
+      </div>
+    </div>
 
 
     <footer class="footer-section">
