@@ -5,8 +5,8 @@ import python_db
 import numpy as np
 
 
-mysql_username = "mltran"  # please change to your username
-mysql_password = "sei5aBei"  # please change to your MySQL password
+mysql_username = "sabburi"  # please change to your username
+mysql_password = "AChai5ch"  # please change to your MySQL password
 
 #Problem 1
 def add_game(teamId1, teamId2, score1, score2, date):
@@ -58,15 +58,14 @@ def add_player(team, playerName, position):
         logging.error(traceback.format_exc())
 
 # Problem 3
-def view_team():
+def view_team(team):
     try:
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
 
-        sql = ("SELECT * FROM Player WHERE TeamId = 1;")
-
-        res = python_db.executeSelect(sql, None)
+        sql = "SELECT * FROM Player WHERE TeamId = %s" 
+        res = python_db.executeSelect(sql, (team,))
         print("<table border='1'><tr><th>Player ID</th><th>Team Id</th><th>Name</th><th>Position</th></tr>")
         for row in res:
             row = dict(zip(['PlayerId', 'TeamId', 'Name', 'Position'], row))
@@ -86,14 +85,11 @@ def view_players_position(position):
         )  # open database
         sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
         res = python_db.executeSelect(sql, (position,))
-        if not res:
-            print(f"No players found for the {position} position.")
-        else:
-            print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
-            for row in res:
-                row = dict(zip(['Name', 'Position', 'Nickname'], row))
-                print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
-            print("</table>")
+        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
+        for row in res:
+            row = dict(zip(['Name', 'Position', 'Nickname'], row))
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -121,15 +117,12 @@ def view_all_teams():
                "GROUP BY Team.Conference, Team.Location, Team.Nickname "
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
-        res = python_db.executeSelect(sql, None)
-        if not res:
-            print(f"No teams found.")
-        else:
-            print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
-            for row in res:
-                row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
-                print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['TeamConference']}</td><td>{row['Wins']}</td><td>{row['ConferenceWins']}</td></tr>")
-            print("</table>")
+        res = python_db.executeSelect(sql)
+        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
+        for row in res:
+            row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
+            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['TeamConference']}</td><td>{row['Wins']}</td><td>{row['ConferenceWins']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -137,6 +130,7 @@ def view_all_teams():
 
 # Problem 6
 def view_team_games(team):
+    html_table = "" 
     
     try:
         python_db.open_database(
@@ -152,14 +146,11 @@ def view_team_games(team):
             "WHERE Team.Nickname = %s")
 
         res = python_db.executeSelect(sql, (team,))
-        if not res:
-            print(f"No games found for", team, '.')
-        else:
-            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
-            for row in res:
-                row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
-                print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
-            print("</table>")
+        print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
+        for row in res:
+            row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
+            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -167,6 +158,7 @@ def view_team_games(team):
 
 # Problem 7
 def view_games_date(date):
+    html_table = "" 
     
     try:
         python_db.open_database(
@@ -185,14 +177,11 @@ def view_games_date(date):
         )
 
         res = python_db.executeSelect(sql, (date,))
-        if not res:
-            print(f"No games found on", date, '.')
-        else:
-            print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
-            for row in res:
-                row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
-                print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
-            print("</table>")
+        print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
+        for row in res:
+            row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
+            print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -205,22 +194,17 @@ def view_best_division():
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
-        sql = (
-            "SELECT p.Name, p.Position, t.Nickname, t.Division "
-            "FROM Player p JOIN Team t ON p.TeamId = t.TeamId "
-            "JOIN (SELECT t.Division FROM Team t JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2 "
-            "WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1) "
-            "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;"
-        )
-        res = python_db.executeSelect(sql, None)
-        if not res:
-            print(f"No games entered to determine the best division.")
-        else:
-            print("<table border='1' class='table custom-table'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
-            for row in res:
-                row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
-                print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
-            print("</table>")
+        sql = ("SELECT p.Name, p.Position, t.Nickname, t.Division"
+                "FROM Player p JOIN Team t ON p.TeamId = t.TeamId"
+                "JOIN (SELECT t.Division FROM Team t JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2"
+                "WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1)"
+                "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;")
+        res = python_db.executeSelect(sql)
+        print("<table border='1'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
+        for row in res:
+            row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
+            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
+        print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -241,7 +225,8 @@ if __name__ == "__main__":
         team, playerName, position = sys.argv[2:]
         add_player(team, playerName, position)
     elif sys.argv[1] == 'view_team':
-        view_team()
+        team= sys.argv[2]
+        view_team(team)
     elif sys.argv[1] == 'view_players_position':
         view_players_position(sys.argv[2])
     elif sys.argv[1] == 'view_all_teams':
