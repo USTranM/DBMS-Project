@@ -32,6 +32,22 @@
       return true;
     }
   </script>
+
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
 </head>
 
 <body>
@@ -114,6 +130,8 @@
 
 <body>
 
+	<a href="index.php" class="home-button">Home</a>
+
     <!-- Hamburger Icon -->
         <div class="menu-icon" onclick="toggleMenu()">
             <span></span>
@@ -177,10 +195,20 @@
         <label for="playerPosition">Player Position<sup>*</sup>:</label>
         <select class="form-control" name="playerPosition" id="playerPosition" required>
           <option value="" disabled selected>Select a position</option>
-          <option value="Goalkeeper">Goalkeeper</option>
-          <option value="Defender">Defender</option>
-          <option value="Midfielder">Midfielder</option>
-          <option value="Forward">Forward</option>
+          <option value="Center">Defender</option>
+          <option value="Offensive Guard">Offensive Guard</option>
+	  <option value="Offensive Tackle">Offensive Tackle</option>
+	  <option value="Quarterback">Quarterback</option>
+          <option value="Running Back">Running Back</option>
+          <option value="Wide Receiver">Wide Receiver</option>
+          <option value="Defensive Tackle">Defensive Tackle</option>
+	  <option value="Nose Tackle">Nose Tackle</option>
+          <option value="Defensive End">Defensive End</option>
+          <option value="Middle Linebacker">Middle Linebacker</option>
+          <option value="Outside Linebacker">Outside Linebacker</option>
+          <option value="Cornerback">Cornerback</option>
+
+
         </select>
       </div>
 

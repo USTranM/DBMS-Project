@@ -27,6 +27,22 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
+
 </head>
 
 <body>
@@ -98,7 +114,7 @@
       </style>
       </head>
       <body>
-      
+        <a href="index.php" class="home-button">Home</a>
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -140,6 +156,7 @@
         </div>
       </div>
     </div>
+    <h2>Player Information</h2>
 
     <?php
       $pos = escapeshellarg($_POST['position']);
@@ -151,7 +168,7 @@
 
     <form action="view_players_position.php" method="post">
         <div>
-          <input type="text" class="form-control" placeholder="Position" name="position">
+          <input type="text" class="form-control" placeholder="Position" name="position" required>
           <!--
           <label for="team1">Team 1:</label>
           <select name="team1" id="team1">
@@ -162,10 +179,8 @@
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Player Information</h2>
 
 
-      <div class="site-section bg-dark">
       <div class="container">
             
             <div class="widget-next-match">
@@ -173,7 +188,6 @@
               </table>
             </div>
       </div>
-    </div>
 
 
     <footer class="footer-section">

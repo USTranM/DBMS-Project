@@ -27,6 +27,21 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
 </head>
 
 <body>
@@ -99,6 +114,9 @@
       </head>
       <body>
       
+        <!-- Home Button -->
+  <a href="index.php" class="home-button">Home</a>
+
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -144,23 +162,39 @@
 
     <h2>Player Information</h2>
     
-    <?php
-      $command = 'python3 nfl.py view_team';
-      $escaped_command = escapeshellcmd($command);
-      system($escaped_command);
-    ?>
-        <div class="site-section bg-dark">
+<form action="view_team.php" method="post">
+    <div class="form-group">
+        <label for="team"><sup></sup></label>
+        <select class="form-control" name="team" id="team" required>
+            <option value="" disabled selected>Select a team</option>
+            <option value="5">Dallas Cowboys</option>
+            <option value="6">Chicago Bears</option>
+            <option value="7">Baltimore Ravens</option>
+            <option value="8">Indianapolis Colts</option>
+        </select>
+    </div>
+
+    <input type="hidden" name="submit" value="1">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<?php
+if (isset($_POST['submit'])) {
+  $teamId = escapeshellarg($_POST['team']);
+
+  $command = 'python3 nfl.py view_team' . ' ' . $teamId;
+  // Execute the command and capture the output
+  $escaped_command = escapeshellcmd($command);
+  system($escaped_command);
+}
+?>
       <div class="container">
-            
             <div class="widget-next-match">
               <table class="table custom-table">
 
               </table>
             </div>
       </div>
-    </div>
-
-
 
     <footer class="footer-section">
       <div class="container">
@@ -203,10 +237,9 @@
   <script src="js/jquery.fancybox.min.js"></script>
   <script src="js/jquery.sticky.js"></script>
   <script src="js/jquery.mb.YTPlayer.min.js"></script>
-
-
   <script src="js/main.js"></script>
 
 </body>
 
 </html>
+

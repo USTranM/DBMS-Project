@@ -26,7 +26,21 @@
   <link rel="stylesheet" href="css/aos.css">
 
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
 
+    /* Other styles */
+  </style>
 </head>
 
 <body>
@@ -98,7 +112,7 @@
       </style>
       </head>
       <body>
-      
+        <a href="index.php" class="home-button">Home</a>
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -140,6 +154,7 @@
       </div>
     </div>
 
+    <h2>All Games On This Date</h2>
 
     <?php
       $date = escapeshellarg($_POST['date']);
@@ -152,12 +167,11 @@
     <form action="view_games_date.php" method="post">
         <div>
           <label for="date">Date:</label>
-          <input type="date" name="date" id="date">
+          <input type="date" name="date" id="date" required>
         </div>
         <button type="submit">Submit</button>
     </form>
 
-    <h2>All Games On This Date</h2>
 
     <div id="player-table">
       <!-- <?php echo $output; ?> -->

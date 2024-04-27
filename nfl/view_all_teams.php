@@ -140,6 +140,7 @@
         </div>
       </div>
     </div>
+    <h2>Team Information</h2>
 
     <?php
       $command = 'python3 nfl.py view_all_teams';
@@ -147,9 +148,7 @@
       system($escaped_command);
     ?>
 
-    <h2>Player Information</h2>
 
-    <div class="site-section bg-dark">
       <div class="container">
             
             <div class="widget-next-match">
@@ -158,7 +157,6 @@
               </table>
             </div>
       </div>
-    </div>
 
 
 
