@@ -169,15 +169,18 @@
     ?>
 
     <form action="view_team_games.php" method="post">
-        <div>
+	<!--
+	<div>
           <input type="text" class="form-control" placeholder="Team Nickname" name="team" required>
-          <!--
-          <label for="team1">Team 1:</label>
-          <select name="team1" id="team1">
-              <option value="team1_id">Team 1 Name</option>
-          </select>
-          -->
-        </div>
+	</div>
+	-->
+        <select class="form-control" name="team" id="team" required>
+          	<option value="" disabled selected>Select a team</option>
+          	<option value="5">Dallas Cowboys</option>
+                <option value="6">Chicago Bears</option>
+                <option value="7">Baltimore Ravens</option>
+                <option value="8">Indianapolis Colts</option>
+        </select>
         <button type="submit">Submit</button>
     </form>
 

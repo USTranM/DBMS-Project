@@ -86,7 +86,6 @@ def view_players_position(position):
         )  # open database
         sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
         res = python_db.executeSelect(sql, (position,))
-        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
         if not res:
             print(f"No players found for the {position} position.")
         else:
@@ -120,6 +119,7 @@ def view_all_teams():
                "LEFT JOIN Team AS OpponentTeam ON (Game.TeamId1 = OpponentTeam.TeamId OR Game.TeamId2 = OpponentTeam.TeamId) "
                "GROUP BY Team.Conference, Team.Location, Team.Nickname "
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
+        res = python_db.executeSelect(sql, None)
 
         if not res:
             print(f"No teams found.")
@@ -143,19 +143,31 @@ def view_team_games(team):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, "
-            "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
-            "IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result "
-            "FROM Game "
-            "JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId "
-            "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId "
-            "WHERE Team.Nickname = %s")
+        #sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, "
+        #    "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
+        #    "IF((Game.TeamId1 = %s AND Game.Score1 > Game.Score2) OR (Game.TeamId2 = %s AND Game.Score2 > Game.Score1), 'Won', 'Lost') AS Result "
+        #    "FROM Game "
+        #    "JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId "
+        #    "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId "
+        #    "WHERE Game.TeamId1 = %s")
 
-        res = python_db.executeSelect(sql, (team,))
+        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
+                "IF((Game.TeamId1 = %s AND Game.Score1 > Game.Score2) OR (Game.TeamId2 = %s AND Game.Score2 > Game.Score1), 'Won', 'Lost') AS Result "
+                "FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId JOIN Team AS Opponent ON Game.TeamId2 = Team2.TeamId "
+                "WHERE (Game.TeamId1 = %s OR Game.TeamId2 = %s);")
+        
+        sql = ("SELECT Team.Location AS TeamLocation, Team.Nickname AS TeamNickname, "
+                "CASE WHEN Game.TeamId1 = Team.TeamId THEN (SELECT Location FROM Team WHERE TeamId = Game.TeamId2) ELSE (SELECT Location FROM Team WHERE TeamId = Game.TeamId1) END AS OpponentLocation, "
+                "CASE WHEN Game.TeamId1 = Team.TeamId THEN (SELECT Nickname FROM Team WHERE TeamId = Game.TeamId2) ELSE (SELECT Nickname FROM Team WHERE TeamId = Game.TeamId1) END AS OpponentNickname, "
+                "Game.Date, Game.Score1, Game.Score2, "
+                "CASE WHEN Team.TeamId = Game.TeamId1 AND Game.Score1 > Game.Score2 THEN 'Won' WHEN Team.TeamId = Game.TeamId2 AND Game.Score2 > Game.Score1 THEN 'Won' ELSE 'Lost' END AS Result "
+                "FROM Game JOIN Team ON Team.TeamId = Game.TeamId1 OR Team.TeamId = Game.TeamId2 WHERE Team.TeamId = %s;")
+        
+        res = python_db.executeSelect(sql, (team, ))
         if not res:
-            print(f"No games found for", team, '.')
+            print(f'No games found for this team.')
         else:
-            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
+            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Win/Lose</th></tr>")
             for row in res:
                 row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
                 print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
