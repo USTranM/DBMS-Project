@@ -143,10 +143,21 @@
 
 
     <h2>Player Information</h2>
+    
+    <?php
+      $command = 'python3 nfl.py view_team';
+      $escaped_command = escapeshellcmd($command);
+      system($escaped_command);
+    ?>
+        <div class="site-section bg-dark">
+      <div class="container">
+            
+            <div class="widget-next-match">
+              <table class="table custom-table">
 
-    <!-- Python output will be inserted here -->
-    <div id="player-table">
-        <!-- Python output will be inserted here -->
+              </table>
+            </div>
+      </div>
     </div>
 
 

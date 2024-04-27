@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Soccer &mdash; Website by Colorlib</title>
+  <title>Add New Game Information</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
 
   <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
   <link rel="stylesheet" href="css/jquery-ui.css">
@@ -19,7 +21,6 @@
 
   <link rel="stylesheet" href="css/jquery.fancybox.min.css">
 
-  <link rel="stylesheet" href="css/bootstrap-datepicker.css">
 
   <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
 
@@ -28,9 +29,40 @@
   <link rel="stylesheet" href="css/style.css">
 
   <script>
-        function displaySuccessMessage() {
-            alert("Game added successfully!");
+      function validateForm() {
+          var team1 = document.getElementById("team1").value;
+          var score1 = document.getElementById("score1").value;
+          var team2 = document.getElementById("team2").value;
+          var score2 = document.getElementById("score2").value;
+          if (team1 === team2) {
+            alert("Team 1 and Team 2 must be different");
+            return false;
+          }
+          var date = document.getElementById("date").value;
+          
+          if (team1 === "" || score1 === "" || team2 === "" || score2 === "" || date === "") {
+            alert("All fields are required");
+            return false;
+          }
+          // Validate if the date is today or in the past
+          var selectedDate = new Date(date);
+          var today = new Date();
+          today.setHours(0, 0, 0, 0); // Set time to midnight
+          
+          if (selectedDate > today) {
+            alert("Please select a date that is today or in the past");
+            return false;
+          }
+          // Validate if the scores are digits
+          var scorePattern = /^\d+$/;
+          if (!scorePattern.test(score1) || !scorePattern.test(score2)) {
+            alert("Scores must contain only digits");
+            return false;
+          }
+
+          return true;
         }
+
   </script>
 
 </head>
@@ -149,48 +181,66 @@
 
     <h2>New Game Entry</h2>
 
-<form action="add_game.php" method="post" onsubmit="displaySuccessMessage()">
-    <div>
-        <label for="team1">Team 1:</label>
-        <select name="team1" id="team1">
-            <option value="team1_id">Team 1 Name</option>
-              
+<form action="add_game.php" method="post" onsubmit="return validateForm()">
+    <div class="form-group">
+        <label for="team1">Team 1<sup>*</sup>:</label>
+        <select class="form-control" name="team1" id="team1" required>
+            <option value="" disabled selected>Select a team</option>
+            <option value="1">United</option>
+            <option value="2">Liverpool</option>
+            <option value="3">FC Barcelona</option>
+            <option value="4">Real Madrid</option>
         </select>
     </div>
-    <div>
-        <label for="score1">Score 1:</label>
-        <input type="number" name="score1" id="score1" min="0">
+    <div class="form-group">
+        <label for="score1">Score 1<sup>*</sup>:</label>
+        <input class="form-control" type="number" name="score1" id="score1" min="0" required>
     </div>
-    <div>
-        <label for="team2">Team 2:</label>
-        <select name="team2" id="team2">
-            <option value="team2_id">Team 2 Name</option>
-            <!-- Add options for each team -->
+    <div class="form-group">
+        <label for="team2">Team 2<sup>*</sup>:</label>
+        <select class="form-control" name="team2" id="team2" required>
+            <option value="" disabled selected>Select a team</option>
+            <option value="1">United</option>
+            <option value="2">Liverpool</option>
+            <option value="3">FC Barcelona</option>
+            <option value="4">Real Madrid</option>
         </select>
     </div>
-    <div>
-        <label for="score2">Score 2:</label>
-        <input type="number" name="score2" id="score2" min="0">
+    <div class="form-group">
+        <label for="score2">Score 2<sup>*</sup>:</label>
+        <input class="form-control" type="number" name="score2" id="score2" min="0" required>
     </div>
-    <div>
-        <label for="date">Date:</label>
-        <input type="date" name="date" id="date">
+    <div class="form-group">
+        <label for="date">Date<sup>*</sup>:</label>
+        <input class="form-control" type="date" id="date" name="date" required>
     </div>
-    <button type="submit">Submit</button>
+
+    <input type="hidden" name="submit" value="1">
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 
+
+
 <?php
+if (isset($_POST['submit'])) {
   $teamId1 = escapeshellarg($_POST['team1']);
   $teamId2 = escapeshellarg($_POST['team2']);
   $score1 = escapeshellarg($_POST['score1']);
   $score2 = escapeshellarg($_POST['score2']);
   $date = escapeshellarg($_POST['date']);
 
-  $command = 'python3 nfl.py add_game' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
-  $escaped_command = escapeshellcmd($command);
+  $command = 'python3 nfl.py add_game' . ' ' . $teamId1 . ' ' . $teamId2 . ' ' . $score1 . ' ' . $score2 . ' ' . $date;
+  // Execute the command and capture the output
+  $output = shell_exec($command);
 
-  system($escaped_command);
+  // Display the output as a success message
+  if (strpos($output, 'Game added successfully!') !== false) {
+    echo '<div class="alert alert-success" role="alert">Game added successfully!</div>';
+} else {
+    echo '<div class="alert alert-danger" role="alert">Failed to add the game.</div>';
+}
+}
 ?>
 
 
@@ -237,8 +287,22 @@
   <script src="js/jquery.mb.YTPlayer.min.js"></script>
 
 
-  <script src="js/main.js"></script>
-
+  <!-- Include jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Include Bootstrap JS -->
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Custom script to close date picker after selection -->
+  <script>
+    // Wait for the document to be ready
+    $(document).ready(function() {
+      // Add change event listener to the date input field
+      $('#date').on('change', function() {
+        // Close the date picker by removing the focus from the input field
+        $(this).blur();
+      });
+    });
+  </script>
+</body>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 mysql <<EOFMYSQL
-use mltran;
+use sabburi;
 show tables;
 
 SET FOREIGN_KEY_CHECKS=0;
