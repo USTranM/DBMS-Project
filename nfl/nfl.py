@@ -86,11 +86,14 @@ def view_players_position(position):
         )  # open database
         sql = "SELECT Player.Name, Player.Position, Team.Nickname FROM Player NATURAL JOIN Team WHERE Player.Position = %s;"
         res = python_db.executeSelect(sql, (position,))
-        print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
-        for row in res:
-            row = dict(zip(['Name', 'Position', 'Nickname'], row))
-            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
-        print("</table>")
+        if not res:
+            print(f"No players found for the {position} position.")
+        else:
+            print("<table border='1'><tr><th>Name</th><th>Position</th><th>Team Nickname</th></tr>")
+            for row in res:
+                row = dict(zip(['Name', 'Position', 'Nickname'], row))
+                print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
+            print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -119,11 +122,14 @@ def view_all_teams():
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
         res = python_db.executeSelect(sql, None)
-        print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
-        for row in res:
-            row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
-            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['TeamConference']}</td><td>{row['Wins']}</td><td>{row['ConferenceWins']}</td></tr>")
-        print("</table>")
+        if not res:
+            print(f"No teams found.")
+        else:
+            print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
+            for row in res:
+                row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
+                print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['TeamConference']}</td><td>{row['Wins']}</td><td>{row['ConferenceWins']}</td></tr>")
+            print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -131,7 +137,6 @@ def view_all_teams():
 
 # Problem 6
 def view_team_games(team):
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -147,11 +152,14 @@ def view_team_games(team):
             "WHERE Team.Nickname = %s")
 
         res = python_db.executeSelect(sql, (team,))
-        print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
-        for row in res:
-            row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
-            print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
-        print("</table>")
+        if not res:
+            print(f"No games found for", team, '.')
+        else:
+            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
+            for row in res:
+                row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
+                print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+            print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -159,7 +167,6 @@ def view_team_games(team):
 
 # Problem 7
 def view_games_date(date):
-    html_table = "" 
     
     try:
         python_db.open_database(
@@ -178,11 +185,14 @@ def view_games_date(date):
         )
 
         res = python_db.executeSelect(sql, (date,))
-        print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
-        for row in res:
-            row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
-            print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
-        print("</table>")
+        if not res:
+            print(f"No games found on", date, '.')
+        else:
+            print("<table border='1'><tr><th>Team 1 Nickname</th><th>Team 1 Location</th><th>Team 2 Nickname</th><th>Team 2 Location</th><th>Team 1 Score</th><th>Team 2 Score</th><th>Winner</th></tr>")
+            for row in res:
+                row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
+                print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
+            print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
@@ -203,11 +213,14 @@ def view_best_division():
             "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;"
         )
         res = python_db.executeSelect(sql, None)
-        print("<table border='1' class='table custom-table'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
-        for row in res:
-            row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
-            print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
-        print("</table>")
+        if not res:
+            print(f"No games entered to determine the best division.")
+        else:
+            print("<table border='1' class='table custom-table'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
+            for row in res:
+                row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
+                print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
+            print("</table>")
 
         python_db.close_db()  # close db
     except Exception as e:
