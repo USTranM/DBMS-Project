@@ -27,6 +27,22 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
 </head>
 
 <body>
@@ -120,6 +136,9 @@
         </ul>
     </div>
 
+            <!-- Home Button -->
+  <a href="index.php" class="home-button">Home</a>
+
       <script>
           // JavaScript to toggle the menu
           function toggleMenu() {
@@ -151,7 +170,7 @@
 
     <form action="view_players_position.php" method="post">
         <div>
-          <input type="text" class="form-control" placeholder="Position" name="position" required>
+          <input type="text" class="form-control" placeholder="Position" name="position">
           <!--
           <label for="team1">Team 1:</label>
           <select name="team1" id="team1">
