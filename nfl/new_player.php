@@ -18,6 +18,22 @@
     <link rel="stylesheet" href="css/aos.css">
     <link rel="stylesheet" href="css/style.css">
 
+
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
     <script>
     function validateForm() {
       var playerName = document.getElementById("playerName").value;
@@ -113,6 +129,9 @@
 </head>
 
 <body>
+
+        <!-- Home Button -->
+        <a href="index.php" class="home-button">Home</a>
 
     <!-- Hamburger Icon -->
         <div class="menu-icon" onclick="toggleMenu()">
