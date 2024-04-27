@@ -5,8 +5,8 @@ import python_db
 import numpy as np
 
 
-mysql_username = ""  # please change to your username
-mysql_password = ""  # please change to your MySQL password
+mysql_username = "mltran"  # please change to your username
+mysql_password = "sei5aBei"  # please change to your MySQL password
 
 #Problem 1
 def add_game(teamId1, teamId2, score1, score2, date):
@@ -118,7 +118,7 @@ def view_all_teams():
                "GROUP BY Team.Conference, Team.Location, Team.Nickname "
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
 
-        res = python_db.executeSelect(sql)
+        res = python_db.executeSelect(sql, None)
         print("<table border='1'><tr><th>Team Nickname</th><th>Location</th><th>Conference</th><th>Total Wins</th><th>Wins During Conference</th></tr>")
         for row in res:
             row = dict(zip(['TeamNickname', 'TeamLocation', 'TeamConference', 'Wins', 'ConferenceWins'], row))
@@ -195,13 +195,15 @@ def view_best_division():
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
-        sql = ("SELECT p.Name, p.Position, t.Nickname, t.Division"
-                "FROM Player p JOIN Team t ON p.TeamId = t.TeamId"
-                "JOIN (SELECT t.Division FROM Team t JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2"
-                "WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1)"
-                "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;")
-        res = python_db.executeSelect(sql)
-        print("<table border='1'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
+        sql = (
+            "SELECT p.Name, p.Position, t.Nickname, t.Division "
+            "FROM Player p JOIN Team t ON p.TeamId = t.TeamId "
+            "JOIN (SELECT t.Division FROM Team t JOIN Game g ON t.TeamId = g.TeamId1 OR t.TeamId = g.TeamId2 "
+            "WHERE (g.TeamId1 = t.TeamId AND g.Score1 > g.Score2) OR (g.TeamId2 = t.TeamId AND g.Score2 > g.Score1) "
+            "GROUP BY t.Division ORDER BY COUNT(*) DESC LIMIT 1) best_division ON t.Division = best_division.Division;"
+        )
+        res = python_db.executeSelect(sql, None)
+        print("<table border='1' class='table custom-table'><tr><th>Player Name</th><th>Player Position</th><th>Team Nickname</th><th>Team Division</th></tr>")
         for row in res:
             row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
             print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
