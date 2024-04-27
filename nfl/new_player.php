@@ -163,10 +163,10 @@
         <label for="team">Select Team<sup>*</sup>:</label>
         <select class="form-control" name="team" id="team" required>
           <option value="" disabled selected>Select a team</option>
-          <option value="1">United</option>
-                <option value="2">Liverpool</option>
-                <option value="3">FC Barcelona</option>
-                <option value="4">Real Madrid</option>
+                <option value="5">Dallas Cowboys</option>
+                <option value="6">Chicago Bears</option>
+                <option value="7">Baltimore Ravens</option>
+                <option value="8">Indianapolis Colts</option>
         </select>
       </div>
         <div class="form-group">

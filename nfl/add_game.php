@@ -185,11 +185,11 @@
     <div class="form-group">
         <label for="team1">Team 1<sup>*</sup>:</label>
         <select class="form-control" name="team1" id="team1" required>
-            <option value="" disabled selected>Select a team</option>
-            <option value="1">United</option>
-            <option value="2">Liverpool</option>
-            <option value="3">FC Barcelona</option>
-            <option value="4">Real Madrid</option>
+          <option value="" disabled selected>Select a team</option>
+          <option value="5">Dallas Cowboys</option>
+          <option value="6">Chicago Bears</option>
+          <option value="7">Baltimore Ravens</option>
+          <option value="8">Indianapolis Colts</option>
         </select>
     </div>
     <div class="form-group">
@@ -199,11 +199,11 @@
     <div class="form-group">
         <label for="team2">Team 2<sup>*</sup>:</label>
         <select class="form-control" name="team2" id="team2" required>
-            <option value="" disabled selected>Select a team</option>
-            <option value="1">United</option>
-            <option value="2">Liverpool</option>
-            <option value="3">FC Barcelona</option>
-            <option value="4">Real Madrid</option>
+          <option value="" disabled selected>Select a team</option>
+          <option value="5">Dallas Cowboys</option>
+          <option value="6">Chicago Bears</option>
+          <option value="7">Baltimore Ravens</option>
+          <option value="8">Indianapolis Colts</option>
         </select>
     </div>
     <div class="form-group">
