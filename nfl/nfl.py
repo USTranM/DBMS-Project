@@ -58,15 +58,15 @@ def add_player(team, playerName, position):
         logging.error(traceback.format_exc())
 
 # Problem 3
-def view_team():
+def view_team(team):
     try:
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
 
-        sql = ("SELECT * FROM Player WHERE TeamId = 1;")
+        sql = "SELECT * FROM Player WHERE TeamId = %s" 
+        res = python_db.executeSelect(sql, (team,))
 
-        res = python_db.executeSelect(sql, None)
         print("<table border='1'><tr><th>Player ID</th><th>Team Id</th><th>Name</th><th>Position</th></tr>")
         for row in res:
             row = dict(zip(['PlayerId', 'TeamId', 'Name', 'Position'], row))
@@ -120,7 +120,6 @@ def view_all_teams():
                "LEFT JOIN Team AS OpponentTeam ON (Game.TeamId1 = OpponentTeam.TeamId OR Game.TeamId2 = OpponentTeam.TeamId) "
                "GROUP BY Team.Conference, Team.Location, Team.Nickname "
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
-
         res = python_db.executeSelect(sql, None)
         if not res:
             print(f"No teams found.")
@@ -143,24 +142,22 @@ def view_team_games(team):
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
         
-        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, "
-            "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
-            "IF(Game.TeamId1 = 1 AND Game.Score1 > Game.Score2, 'Won', 'Lost') AS Result "
-            "FROM Game "
-            "JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId "
-            "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId "
-            "WHERE Team.Nickname = %s")
-
-        res = python_db.executeSelect(sql, (team,))
+        sql = ("SELECT Team.Location AS TeamLocation, Team.Nickname AS TeamNickname, "
+                "CASE WHEN Game.TeamId1 = Team.TeamId THEN (SELECT Location FROM Team WHERE TeamId = Game.TeamId2) ELSE (SELECT Location FROM Team WHERE TeamId = Game.TeamId1) END AS OpponentLocation, "
+                "CASE WHEN Game.TeamId1 = Team.TeamId THEN (SELECT Nickname FROM Team WHERE TeamId = Game.TeamId2) ELSE (SELECT Nickname FROM Team WHERE TeamId = Game.TeamId1) END AS OpponentNickname, "
+                "Game.Date, Game.Score1, Game.Score2, "
+                "CASE WHEN Team.TeamId = Game.TeamId1 AND Game.Score1 > Game.Score2 THEN 'Won' WHEN Team.TeamId = Game.TeamId2 AND Game.Score2 > Game.Score1 THEN 'Won' ELSE 'Lost' END AS Result "
+                "FROM Game JOIN Team ON Team.TeamId = Game.TeamId1 OR Team.TeamId = Game.TeamId2 WHERE Team.TeamId = %s;")
+        
+        res = python_db.executeSelect(sql, (team, ))
         if not res:
-            print(f"No games found for", team, '.')
+            print(f'No games found for this team.')
         else:
-            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Did {team} win?</th></tr>")
+            print(f"<table border='1'><tr><th>Team Nickname</th><th>Team Location</th><th>Opponent Nickname</th><th>Team Location</th><th>Game Date</th><th>Team Score</th><th>Opponent Score</th><th>Win/Lose</th></tr>")
             for row in res:
                 row = dict(zip(['TeamNickname', 'TeamLocation', 'OpponentNickname', 'OpponentLocation', 'Date', 'Score1', 'Score2', 'WL'], row))
                 print(f"<tr><td>{row['TeamNickname']}</td><td>{row['TeamLocation']}</td><td>{row['OpponentNickname']}</td><td>{row['OpponentLocation']}</td><td>{row['Date']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
             print("</table>")
-
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -193,7 +190,6 @@ def view_games_date(date):
                 row = dict(zip(['Team1Nickname', 'Team1Location', 'Team2Nickname', 'Team2Location', 'Score1', 'Score2', 'WL'], row))
                 print(f"<tr><td>{row['Team1Nickname']}</td><td>{row['Team1Location']}</td><td>{row['Team2Nickname']}</td><td>{row['Team2Location']}</td><td>{row['Score1']}</td><td>{row['Score2']}</td><td>{row['WL']}</td></tr>")
             print("</table>")
-
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -221,7 +217,6 @@ def view_best_division():
                 row = dict(zip(['Name', 'Position', 'Nickname', 'Division'], row))
                 print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td><strong class=\"text-white\">{row['Nickname']}</strong></td><td>{row['Division']}</td></tr>")
             print("</table>")
-
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -241,7 +236,7 @@ if __name__ == "__main__":
         team, playerName, position = sys.argv[2:]
         add_player(team, playerName, position)
     elif sys.argv[1] == 'view_team':
-        view_team()
+        view_team(sys.argv[2])
     elif sys.argv[1] == 'view_players_position':
         view_players_position(sys.argv[2])
     elif sys.argv[1] == 'view_all_teams':

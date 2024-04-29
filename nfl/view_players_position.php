@@ -27,6 +27,22 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
+
 </head>
 
 <body>
@@ -98,7 +114,7 @@
       </style>
       </head>
       <body>
-      
+        <a href="index.php" class="home-button">Home</a>
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -140,9 +156,10 @@
         </div>
       </div>
     </div>
+    <h2>Player Information</h2>
 
     <?php
-      $pos = escapeshellarg($_POST['position']);
+      $pos = escapeshellarg($_POST['playerPosition']);
       $command = 'python3 nfl.py view_players_position ' . $pos;
       $escaped_command = escapeshellcmd($command);
       // $output = shell_exec($command);
@@ -151,21 +168,27 @@
 
     <form action="view_players_position.php" method="post">
         <div>
-          <input type="text" class="form-control" placeholder="Position" name="position" required>
-          <!--
-          <label for="team1">Team 1:</label>
-          <select name="team1" id="team1">
-              <option value="team1_id">Team 1 Name</option>
-          </select>
-          -->
-        </div>
+	<select class="form-control" name="playerPosition" id="playerPosition" required>
+          <option value="" disabled selected>Select a position</option>
+          <option value="Center">Defender</option>
+          <option value="Offensive Guard">Offensive Guard</option>
+          <option value="Offensive Tackle">Offensive Tackle</option>
+          <option value="Quarterback">Quarterback</option>
+          <option value="Running Back">Running Back</option>
+          <option value="Wide Receiver">Wide Receiver</option>
+          <option value="Defensive Tackle">Defensive Tackle</option>
+          <option value="Nose Tackle">Nose Tackle</option>
+          <option value="Defensive End">Defensive End</option>
+          <option value="Middle Linebacker">Middle Linebacker</option>
+          <option value="Outside Linebacker">Outside Linebacker</option>
+          <option value="Cornerback">Cornerback</option>
+        </select>
+	</div>
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Player Information</h2>
 
 
-      <div class="site-section bg-dark">
       <div class="container">
             
             <div class="widget-next-match">
@@ -173,7 +196,6 @@
               </table>
             </div>
       </div>
-    </div>
 
 
     <footer class="footer-section">

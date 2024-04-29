@@ -129,7 +129,7 @@
           }
       </script>
 
-      
+
       <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
         <div class="container">
           <div class="row align-items-center">
@@ -141,6 +141,7 @@
         </div>
       </div>
 
+          <h2>Best Division Based on Wins</h2>
 
     <?php
       $command = 'python3 nfl.py index';
@@ -148,7 +149,6 @@
       system($escaped_command);
     ?>
 
-	  <h2>Best Division Based on Wins</h2>
   	  <div class="container">
     		<div class="widget-next-match">
       			<table class="table custom-table">

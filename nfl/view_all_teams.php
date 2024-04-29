@@ -27,6 +27,22 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+   <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
+
 </head>
 
 <body>
@@ -98,7 +114,8 @@
       </style>
       </head>
       <body>
-      
+          <a href="index.php" class="home-button">Home</a>
+   
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -140,6 +157,7 @@
         </div>
       </div>
     </div>
+    <h2>Team Information</h2>
 
     <?php
       $command = 'python3 nfl.py view_all_teams';
@@ -147,9 +165,7 @@
       system($escaped_command);
     ?>
 
-    <h2>Player Information</h2>
 
-    <div class="site-section bg-dark">
       <div class="container">
             
             <div class="widget-next-match">
@@ -158,7 +174,6 @@
               </table>
             </div>
       </div>
-    </div>
 
 
 

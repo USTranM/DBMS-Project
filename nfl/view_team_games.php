@@ -27,6 +27,22 @@
 
   <link rel="stylesheet" href="css/style.css">
 
+  <style>
+    /* CSS for the hamburger menu and home button */
+   .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px; 
+      z-index: 1000;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Other styles */
+  </style>
+
 </head>
 
 <body>
@@ -98,7 +114,8 @@
       </style>
       </head>
       <body>
-      
+        <a href="index.php" class="home-button">Home</a>
+
       <!-- Hamburger Icon -->
       <div class="menu-icon" onclick="toggleMenu()">
           <span></span>
@@ -141,6 +158,7 @@
       </div>
     </div>
 
+    <h2>Team Information</h2>
 
     <?php
       $team = escapeshellarg($_POST['team']);
@@ -151,19 +169,21 @@
     ?>
 
     <form action="view_team_games.php" method="post">
-        <div>
-          <input type="text" class="form-control" placeholder="Team Name" name="team">
-          <!--
-          <label for="team1">Team 1:</label>
-          <select name="team1" id="team1">
-              <option value="team1_id">Team 1 Name</option>
-          </select>
-          -->
-        </div>
+	<!--
+	<div>
+          <input type="text" class="form-control" placeholder="Team Nickname" name="team" required>
+	</div>
+	-->
+        <select class="form-control" name="team" id="team" required>
+          	<option value="" disabled selected>Select a team</option>
+          	<option value="5">Dallas Cowboys</option>
+                <option value="6">Chicago Bears</option>
+                <option value="7">Baltimore Ravens</option>
+                <option value="8">Indianapolis Colts</option>
+        </select>
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Player Information</h2>
 
     <div id="player-table">
       <!-- <?php echo $output; ?> -->
