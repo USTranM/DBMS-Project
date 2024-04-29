@@ -130,7 +130,6 @@
       </script>
 
 
-
       <div class="hero overlay" style="background-image: url('images/football_bg.jpeg');">
         <div class="container">
           <div class="row align-items-center">

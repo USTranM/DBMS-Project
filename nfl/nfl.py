@@ -94,6 +94,7 @@ def view_players_position(position):
                 row = dict(zip(['Name', 'Position', 'Nickname'], row))
                 print(f"<tr><td>{row['Name']}</td><td>{row['Position']}</td><td>{row['Nickname']}</td></tr>")
             print("</table>")
+
         python_db.close_db()  # close db
     except Exception as e:
         logging.error(traceback.format_exc())
@@ -120,7 +121,6 @@ def view_all_teams():
                "GROUP BY Team.Conference, Team.Location, Team.Nickname "
                "ORDER BY Team.Conference ASC, Wins DESC, ConferenceWins DESC")
         res = python_db.executeSelect(sql, None)
-
         if not res:
             print(f"No teams found.")
         else:
@@ -136,25 +136,11 @@ def view_all_teams():
 
 # Problem 6
 def view_team_games(team):
-    html_table = "" 
     
     try:
         python_db.open_database(
             "localhost", mysql_username, mysql_password, mysql_username
         )  # open database
-        
-        #sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, "
-        #    "Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
-        #    "IF((Game.TeamId1 = %s AND Game.Score1 > Game.Score2) OR (Game.TeamId2 = %s AND Game.Score2 > Game.Score1), 'Won', 'Lost') AS Result "
-        #    "FROM Game "
-        #    "JOIN Team ON Game.TeamId1 = Team.TeamId OR Game.TeamId2 = Team.TeamId "
-        #    "JOIN (SELECT TeamId, Location, Nickname FROM Team) AS Opponent ON Game.TeamId1 = Opponent.TeamId OR Game.TeamId2 = Opponent.TeamId "
-        #    "WHERE Game.TeamId1 = %s")
-
-        sql = ("SELECT Team.Nickname AS TeamNickname, Team.Location AS TeamLocation, Opponent.Nickname AS OpponentNickname, Opponent.Location AS OpponentLocation, Game.Date, Game.Score1, Game.Score2, "
-                "IF((Game.TeamId1 = %s AND Game.Score1 > Game.Score2) OR (Game.TeamId2 = %s AND Game.Score2 > Game.Score1), 'Won', 'Lost') AS Result "
-                "FROM Game JOIN Team AS Team1 ON Game.TeamId1 = Team1.TeamId JOIN Team AS Opponent ON Game.TeamId2 = Team2.TeamId "
-                "WHERE (Game.TeamId1 = %s OR Game.TeamId2 = %s);")
         
         sql = ("SELECT Team.Location AS TeamLocation, Team.Nickname AS TeamNickname, "
                 "CASE WHEN Game.TeamId1 = Team.TeamId THEN (SELECT Location FROM Team WHERE TeamId = Game.TeamId2) ELSE (SELECT Location FROM Team WHERE TeamId = Game.TeamId1) END AS OpponentLocation, "
@@ -178,7 +164,6 @@ def view_team_games(team):
 
 # Problem 7
 def view_games_date(date):
-    html_table = "" 
     
     try:
         python_db.open_database(
